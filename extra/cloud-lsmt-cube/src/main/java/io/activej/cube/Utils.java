@@ -168,12 +168,12 @@ public final class Utils {
 	private static final ThreadLocal<JsonReader<?>> READERS = ThreadLocal.withInitial(CUBE_DSL_JSON::newReader);
 
 	@SuppressWarnings("unchecked")
-	public static @NotNull JsonCodec<Object> getJsonCodec(Type type) {
-		ReadObject<Object> readObject = (ReadObject<Object>) CUBE_DSL_JSON.tryFindReader(type);
+	public static @NotNull JsonCodec<Object> getJsonCodec(DslJson<?> dslJson, Type type) {
+		ReadObject<Object> readObject = (ReadObject<Object>) dslJson.tryFindReader(type);
 		if (readObject == null) {
 			throw new IllegalArgumentException("Cannot serialize " + type);
 		}
-		WriteObject<Object> writeObject = (WriteObject<Object>) CUBE_DSL_JSON.tryFindWriter(type);
+		WriteObject<Object> writeObject = (WriteObject<Object>) dslJson.tryFindWriter(type);
 		if (writeObject == null) {
 			throw new IllegalArgumentException("Cannot deserialize " + type);
 		}

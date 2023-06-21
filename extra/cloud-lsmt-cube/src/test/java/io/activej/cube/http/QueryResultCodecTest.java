@@ -11,8 +11,7 @@ import java.util.List;
 
 import static io.activej.common.Utils.mapOf;
 import static io.activej.cube.ReportType.DATA_WITH_TOTALS;
-import static io.activej.cube.Utils.fromJson;
-import static io.activej.cube.Utils.toJson;
+import static io.activej.cube.Utils.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +19,7 @@ public class QueryResultCodecTest {
 
 	@Test
 	public void test() throws MalformedDataException {
-		QueryResultCodec codec = QueryResultCodec.create(DefiningClassLoader.create(),
+		QueryResultCodec codec = QueryResultCodec.create(CUBE_DSL_JSON, DefiningClassLoader.create(),
 				mapOf("campaign", int.class,
 						"site", String.class),
 				mapOf("impressions", long.class,

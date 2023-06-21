@@ -16,6 +16,7 @@
 
 package io.activej.cube.http;
 
+import com.dslplatform.json.DslJson;
 import io.activej.codegen.DefiningClassLoader;
 import io.activej.common.exception.MalformedDataException;
 import io.activej.common.initializer.WithInitializer;
@@ -37,8 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static io.activej.async.util.LogUtils.toLogger;
-import static io.activej.cube.Utils.fromJson;
-import static io.activej.cube.Utils.toJson;
+import static io.activej.cube.Utils.*;
 import static io.activej.cube.http.Utils.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -51,6 +51,8 @@ public final class CubeHttpClient implements ICube, WithInitializer<CubeHttpClie
 	private AggregationPredicateCodec aggregationPredicateCodec;
 	private final Map<String, Type> attributeTypes = new LinkedHashMap<>();
 	private final Map<String, Type> measureTypes = new LinkedHashMap<>();
+
+	private DslJson<?> dslJson = CUBE_DSL_JSON;
 
 	private DefiningClassLoader classLoader = DefiningClassLoader.create();
 
@@ -82,16 +84,21 @@ public final class CubeHttpClient implements ICube, WithInitializer<CubeHttpClie
 		return this;
 	}
 
+	public CubeHttpClient withDslJson(DslJson<?> dslJson) {
+		this.dslJson = dslJson;
+		return this;
+	}
+
 	private AggregationPredicateCodec getAggregationPredicateCodec() {
 		if (aggregationPredicateCodec == null) {
-			aggregationPredicateCodec = AggregationPredicateCodec.create(attributeTypes, measureTypes);
+			aggregationPredicateCodec = AggregationPredicateCodec.create(dslJson, attributeTypes, measureTypes);
 		}
 		return aggregationPredicateCodec;
 	}
 
 	private QueryResultCodec getQueryResultCodec() {
 		if (queryResultCodec == null) {
-			queryResultCodec = QueryResultCodec.create(classLoader, attributeTypes, measureTypes);
+			queryResultCodec = QueryResultCodec.create(dslJson, classLoader, attributeTypes, measureTypes);
 		}
 		return queryResultCodec;
 	}

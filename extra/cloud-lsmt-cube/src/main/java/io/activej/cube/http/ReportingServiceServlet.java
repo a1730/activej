@@ -16,6 +16,7 @@
 
 package io.activej.cube.http;
 
+import com.dslplatform.json.DslJson;
 import io.activej.bytebuf.ByteBuf;
 import io.activej.codegen.DefiningClassLoader;
 import io.activej.common.exception.MalformedDataException;
@@ -36,8 +37,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static io.activej.bytebuf.ByteBufStrings.wrapUtf8;
-import static io.activej.cube.Utils.fromJson;
-import static io.activej.cube.Utils.toJsonBuf;
+import static io.activej.cube.Utils.*;
 import static io.activej.cube.http.Utils.*;
 import static io.activej.http.HttpHeaderValue.ofContentType;
 import static io.activej.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
@@ -53,6 +53,7 @@ public final class ReportingServiceServlet extends AsyncServletWithStats impleme
 	private AggregationPredicateCodec aggregationPredicateCodec;
 
 	private DefiningClassLoader classLoader = DefiningClassLoader.create();
+	private DslJson<?> dslJson = CUBE_DSL_JSON;
 
 	private ReportingServiceServlet(Eventloop eventloop, ICube cube) {
 		super(eventloop);
@@ -78,16 +79,21 @@ public final class ReportingServiceServlet extends AsyncServletWithStats impleme
 		return this;
 	}
 
+	public ReportingServiceServlet withDslJson(DslJson<?> dslJson){
+		this.dslJson = dslJson;
+		return this;
+	}
+
 	private AggregationPredicateCodec getAggregationPredicateCodec() {
 		if (aggregationPredicateCodec == null) {
-			aggregationPredicateCodec = AggregationPredicateCodec.create(cube.getAttributeTypes(), cube.getMeasureTypes());
+			aggregationPredicateCodec = AggregationPredicateCodec.create(dslJson, cube.getAttributeTypes(), cube.getMeasureTypes());
 		}
 		return aggregationPredicateCodec;
 	}
 
 	private QueryResultCodec getQueryResultCodec() {
 		if (queryResultCodec == null) {
-			queryResultCodec = QueryResultCodec.create(classLoader, cube.getAttributeTypes(), cube.getMeasureTypes());
+			queryResultCodec = QueryResultCodec.create(dslJson, classLoader, cube.getAttributeTypes(), cube.getMeasureTypes());
 		}
 		return queryResultCodec;
 	}

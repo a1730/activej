@@ -10,14 +10,13 @@ import java.util.Objects;
 
 import static io.activej.aggregation.AggregationPredicates.*;
 import static io.activej.common.Utils.mapOf;
-import static io.activej.cube.Utils.fromJson;
-import static io.activej.cube.Utils.toJson;
+import static io.activej.cube.Utils.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.fail;
 
 public class AggregationPredicateCodecTest {
-	private static final AggregationPredicateCodec CODEC = AggregationPredicateCodec.create(
+	private static final AggregationPredicateCodec CODEC = AggregationPredicateCodec.create(CUBE_DSL_JSON,
 			mapOf("campaign", int.class,
 					"site", String.class,
 					"hourOfDay", int.class,
