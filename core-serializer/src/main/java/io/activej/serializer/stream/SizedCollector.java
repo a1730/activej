@@ -10,7 +10,7 @@ interface SizedCollector<T, A, R> {
 	}
 
 	default R create1(T item) {
-		A acc = accumulator(0);
+		A acc = accumulator(1);
 		accumulate(acc, 0, item);
 		return result(acc);
 	}

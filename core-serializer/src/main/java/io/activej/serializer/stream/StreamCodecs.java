@@ -583,11 +583,11 @@ public final class StreamCodecs {
 		};
 	}
 
-	public static <T, C extends Collection<T>> StreamCodec<C> ofCollection(StreamCodec<T> itemCodec, SizedCollector<T, ?, C> collector) {
+	private static <T, C extends Collection<T>> StreamCodec<C> ofCollection(StreamCodec<T> itemCodec, SizedCollector<T, ?, C> collector) {
 		return ofCollection($ -> itemCodec, collector);
 	}
 
-	public static <T, C extends Collection<T>> StreamCodec<C> ofCollection(IntFunction<? extends StreamCodec<? extends T>> itemCodecFn, SizedCollector<T, ?, C> collector) {
+	private static <T, C extends Collection<T>> StreamCodec<C> ofCollection(IntFunction<? extends StreamCodec<? extends T>> itemCodecFn, SizedCollector<T, ?, C> collector) {
 		return new StreamCodec<C>() {
 			@Override
 			public void encode(StreamOutput output, C collection) throws IOException {
@@ -681,11 +681,11 @@ public final class StreamCodecs {
 		return ofMap(StreamCodecs.ofEnum(type), valueCodecFn, toEnumMap(type));
 	}
 
-	static <K, V, M extends Map<K, V>> StreamCodec<M> ofMap(StreamCodec<K> keyCodec, StreamCodec<? extends V> valueCodec, SizedCollectorKV<K, V, ?, M> collector) {
+	private static <K, V, M extends Map<K, V>> StreamCodec<M> ofMap(StreamCodec<K> keyCodec, StreamCodec<? extends V> valueCodec, SizedCollectorKV<K, V, ?, M> collector) {
 		return ofMap(keyCodec, $ -> valueCodec, collector);
 	}
 
-	static <K, V, M extends Map<K, V>> StreamCodec<M> ofMap(
+	private static <K, V, M extends Map<K, V>> StreamCodec<M> ofMap(
 			StreamCodec<K> keyCodec, Function<? super K, ? extends StreamCodec<? extends V>> valueCodecFn,
 			SizedCollectorKV<K, V, ?, M> collector) {
 		return new StreamCodec<M>() {

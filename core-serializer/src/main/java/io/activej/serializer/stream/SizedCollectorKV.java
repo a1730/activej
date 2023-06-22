@@ -10,7 +10,7 @@ interface SizedCollectorKV<K, V, A, R> {
 	}
 
 	default R create1(K key, V value) {
-		A acc = accumulator(0);
+		A acc = accumulator(1);
 		accumulate(acc, 0, key, value);
 		return result(acc);
 	}
